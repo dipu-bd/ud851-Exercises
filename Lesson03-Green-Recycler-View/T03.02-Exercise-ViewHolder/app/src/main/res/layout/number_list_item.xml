@@ -5,10 +5,10 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_gravity="center|top"
         android:id="@+id/tv_item_number"
         android:fontFamily="monospace"
-        style="@style/TextAppearance.AppCompat.Title"
         android:textSize="42sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
