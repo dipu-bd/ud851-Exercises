@@ -25,11 +25,12 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.text.TextUtils;
 import android.widget.Toast;
 
-// TODO (1) Implement OnPreferenceChangeListener
+// (1) Implement OnPreferenceChangeListener
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        OnSharedPreferenceChangeListener {
+        OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -50,8 +51,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 String value = sharedPreferences.getString(p.getKey(), "");
                 setPreferenceSummary(p, value);
             }
+
+            if(p.getKey().equals(getString(R.string.pref_size_key))) {
+                p.setOnPreferenceChangeListener(this);
+            }
         }
-        // TODO (3) Add the OnPreferenceChangeListener specifically to the EditTextPreference
+        // (3) Add the OnPreferenceChangeListener specifically to the EditTextPreference
+
     }
 
     @Override
@@ -88,7 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    // TODO (2) Override onPreferenceChange. This method should try to convert the new preference value
+    // (2) Override onPreferenceChange. This method should try to convert the new preference value
     // to a float; if it cannot, show a helpful error message and return false. If it can be converted
     // to a float check that that float is between 0 (exclusive) and 3 (inclusive). If it isn't, show
     // an error message and return false. If it is a valid number, return true.
@@ -105,5 +111,30 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         super.onDestroy();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        Toast error = Toast.makeText(getContext(),
+                getString(R.string.pref_size_error_message), Toast.LENGTH_SHORT);
+
+        if(preference.getKey().equals(getString(R.string.pref_size_key))) {
+            String value = ((String) newValue).trim();
+            if(TextUtils.isEmpty(value)) {
+                value = "1";
+            }
+            try {
+                float size = Float.parseFloat(value);
+                if(size > 3 || size < 0.1) {
+                    error.show();
+                    return false;
+                }
+            } catch (NumberFormatException nfe) {
+                error.show();
+                return false;
+            }
+        }
+
+        return true;
     }
 }
