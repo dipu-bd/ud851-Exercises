@@ -128,7 +128,7 @@ abstract class TrailedShape {
     protected abstract void drawThisShape(float shapeCenterX, float shapeCenterY, float currentSize, Canvas canvas, Paint paint);
 
     /**
-     * Clears the trail
+     * clears the trail
      */
     void restartTrail() {
         mTrailList.clear();
